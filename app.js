@@ -23,6 +23,7 @@ var app = express();
 //==========================
  // var studentSchema = new mongoose.Schema({}, { strict: false });
 var studentSchema = new mongoose.Schema({
+  _id:Number,
   name:String,
   age:Number
 });
@@ -53,10 +54,11 @@ app.get("/",function(req,res){
 //======================================
 app.post("/",upload.single("file-to-upload"),function (req,res){
   console.log(req.file.path);
-  var model = null;
+  var model = 32;
   mongoXlsx.xlsx2MongoData("./"+req.file.path,studentSchema,function (err,mongoData) {
     console.log("Mongo data:",mongoData);
-    Students.create(mongoData);
+    Students.create(mongoData);//<<====This is creating error instead of create we need to use another method
+
   })
   res.redirect("/")
 })
@@ -81,6 +83,8 @@ app.get("/show",function(req,res){
       res.render("show.ejs",{student:student})
     }
   })
+
+
 })
 
 
