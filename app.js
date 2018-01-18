@@ -54,11 +54,23 @@ app.get("/",function(req,res){
 //======================================
 app.post("/",upload.single("file-to-upload"),function (req,res){
   console.log(req.file.path);
-  var model = 32;
+  // var model = 32;
   mongoXlsx.xlsx2MongoData("./"+req.file.path,studentSchema,function (err,mongoData) {
     console.log("Mongo data:",mongoData);
-    Students.create(mongoData);//<<====This is creating error instead of create we need to use another method
-
+    //==========================for merging objects withsame Enrollment
+    mongoData.forEach(elem => {
+      Students.findById(elem._id,function (err,data) {
+        if (!data) {
+          Students.create(mongoData);
+        } else {
+          console.log("found object - "+data);
+          Students.findByIdAndUpdate(elem._id,elem,function(){
+            console.log("updated");
+          })
+        }
+      })
+    });
+    //==========================================
   })
   res.redirect("/")
 })
