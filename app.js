@@ -1,21 +1,26 @@
 var express = require("express"),
+    app = express(),
     mongoose = require("mongoose"),
     mongoXlsx = require("mongo-xlsx"),
+    bodyParser = require("body-parser"),
     multer    = require("multer"),
     storage = multer.diskStorage(
       {
         destination: function (req, file, cb) {cb(null, 'uploads/')},
         filename: function (req, file, cb) {cb(null, file.originalname)}
-      })
+      });
 
 var upload = multer({ storage: storage });
+
 
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/demo3");
 
-var app = express();
 
 
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 
 //==========================
@@ -25,7 +30,8 @@ var app = express();
 var studentSchema = new mongoose.Schema({
   _id:Number,
   name:String,
-  age:Number
+  age:Number,
+  fees:{amount:Number}
 });
 var Students = mongoose.model("Students",studentSchema);
 
@@ -61,11 +67,25 @@ app.post("/",upload.single("file-to-upload"),function (req,res){
     mongoData.forEach(elem => {
       Students.findById(elem._id,function (err,data) {
         if (!data) {
-          Students.create(mongoData);
+          console.log("creating and passing new obj");
+          var _id = elem._id,
+              name = elem.name,
+              amount= elem.amount,
+              age  = elem.age;
+          var obj = {_id:_id,name:name,age:age,fees:{amount:amount}};
+
+          Students.create(obj);
+
         } else {
           console.log("found object - "+data);
-          Students.findByIdAndUpdate(elem._id,elem,function(){
+          var _id = elem._id,
+              name = elem.name,
+              amount= elem.amount,
+              age  = elem.age;
+          var obj = {_id:_id,name:name,age:age,Fees:{amount:amount}};
+          Students.findByIdAndUpdate(elem._id,obj,function(){
             console.log("updated");
+
           })
         }
       })
