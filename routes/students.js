@@ -1,10 +1,11 @@
-var express = require("express"),
-    app = express(),
-    mongoose = require("mongoose"),
+//=================================Importing all dependencies============
+var mongoose = require('mongoose'),
+    express  = require('express'),
+    router      = express.Router(),
     mongoXlsx = require("mongo-xlsx"),
     bodyParser = require("body-parser"),
     multer    = require("multer"),
-    models  = require('./models/student'),
+    models  = require('../models/student'),
     storage = multer.diskStorage(
       {
         destination: function (req, file, cb) {cb(null, 'uploads/')},
@@ -12,27 +13,13 @@ var express = require("express"),
       });
 
 var upload = multer({ storage: storage });
-
-
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/demo3");
-
-
-
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
-
-
-
-
+//=======================================================================
 
 
 //======================================
 // GET Route
 //======================================
-app.get("/",function(req,res){
+router.get("/",function(req,res){
   res.render("index.ejs")
 })
 
@@ -42,12 +29,12 @@ app.get("/",function(req,res){
 //======================================
 // PoST Route
 //======================================
-app.post("/",upload.single("file-to-upload"),function (req,res){
+router.post("/",upload.single("file-to-upload"),function (req,res){
   console.log(req.file.path);
   // var model = 32;
   mongoXlsx.xlsx2MongoData("./"+req.file.path,models.studentSchema,function (err,mongoData) {
     console.log("Mongo data:",mongoData);
-    //==========================for merging objects withsame Enrollment
+    //==========================for creating new objects and merging objects withsame Enrollment
     mongoData.forEach(elem => {
       models.Students.findById(elem._id,function (err,data) {
         if (!data) {
@@ -80,17 +67,10 @@ app.post("/",upload.single("file-to-upload"),function (req,res){
 })
 
 
-
-
-
-
-
-
-
 //======================
 // SHOW ROUTE
 //======================
-app.get("/show",function(req,res){
+router.get("/show",function(req,res){
   models.Students.find({},function(err,student){
     if (err) {
       console.log(err);
@@ -101,17 +81,4 @@ app.get("/show",function(req,res){
   })
 
 
-})
-
-
-
-
-
-
-
-
-
-
-app.listen(3823,function(){
-  console.log("server started");
 })
