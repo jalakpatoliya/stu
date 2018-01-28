@@ -37,7 +37,21 @@ app.use(bodyParser.urlencoded({
 //---------------------------------------------
 
 
+//======================Search Route==================
+app.get("/search",function(req,res){
+  var query = req.query.search_query;
+  models.Students.findById(query,function (err,data) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("show.ejs",{data:data});
+      console.log(data);
+    }
+  })
 
+})
+
+//======================================================
 
 
 
