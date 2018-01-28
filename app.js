@@ -1,3 +1,4 @@
+//--------------------------------------Importing dependencies ----------------
 var express = require("express"),
     app = express(),
     mongoose = require("mongoose"),
@@ -13,21 +14,30 @@ var express = require("express"),
 
 var upload = multer({ storage: storage });
 
+
+//--------------------------------------------------------------------------
+
 //==============Routes==========================
-var indexRoutes = require('./routes/index'),
-    showRoutes  = require('./routes/show');
-app.use(indexRoutes);
-app.use(showRoutes);
+var indexRoute = require('./routes/index'),
+    showRoute  = require('./routes/show');
+app.use(indexRoute);
+app.use(showRoute);
 //==============================================
 
+
+//+++++++++++++++Connecting to Database+++++++++
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/demo3");
+//++++++++++++++++++++++++++++++++++++++++++++++
 
-
-
+//--------------------Using body parser--------
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+//---------------------------------------------
+
+
+
 
 
 
