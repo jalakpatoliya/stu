@@ -1,3 +1,7 @@
+@Patch 6:
+1. Search box is working fine, data is retrieving and sending to show.ejs.
+2. The show.ejs file is incomplete.
+
 @Last commit to master on 28 Jan-18.
 1. Corrected and added routes for TFee and Marksheet uploads.
 2. Still having issues of duplicate key error.
