@@ -1,6 +1,6 @@
-Last commit to master on 28 Jan-18:
-1.Corrected and added routes for TFee and Marksheet uploads,
-2.Still having issues of duplicate key error,
+Last commit to master on 28 Jan-18
+1.Corrected and added routes for TFee and Marksheet uploads.
+2.Still having issues of duplicate key error.
 3.Next commit to retrieve data using enroll search.
 
 Patch 5 :- v5
